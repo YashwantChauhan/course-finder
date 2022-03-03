@@ -1,26 +1,44 @@
 
 
-
 type Query {
-    getUsers: [User!]!
+    getUsers: getUsersResponse!
 }
 
 type Mutation {
-    signup(username: String! , password: String!, email: String! ): response!
+    signup(form: signUpForm!): authResponse!
+    login(credentials: Auth! ): authResponse!
 }
 
 
-type response{
-    status: String!
-    error: String
-    data: User!
+input Auth{
+    username: String!
+    password: String!
+}
+
+input signUpForm{
+    email: String!
+    username: String!
+    password: String!
 }
 
 type User{
-    id: String!,
-    username: String!,
-    email: String!,
-    password: String!,
-    createdAt: String,
+    id: String!
+    username: String!
+    email: String!
+    createdAt: String
     updatedAt: String!
 }
+
+type authResponse{
+    status: String!
+    token: String
+    error: String
+    data: User
+}
+
+type getUsersResponse {
+    status: String!,
+    error: String,
+    users: [User!]
+}
+

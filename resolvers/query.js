@@ -1,5 +1,16 @@
 
-exports.getUsers = async (parent,context,args) => {
+exports.getUsers = async (args,context) => {
+    if( !context.userId ) {
+        return {
+            "status": "ERROR",
+            "error": "Please login/signup"
+        }
+    }
     const users = await context.prisma.user.findMany()
-    return users;
+    
+    return {
+        status: "OK",
+        users
+    }
+
 }
