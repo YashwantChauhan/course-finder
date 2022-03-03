@@ -1,5 +1,6 @@
 
-exports.getUsers = async (args,context) => {
+exports.getUsers = async (parent,args,context) => {
+    
     if( !context.userId ) {
         return {
             "status": "ERROR",

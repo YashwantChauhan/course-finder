@@ -2,7 +2,7 @@
 const { hashSync, compareSync } = require('bcrypt')
 const { createToken } = require('./../helpers/jwt-utils')
 
-exports.signup = async (args, context) => {
+exports.signup = async (parent,args,context) => {
     try {
         
         const hashPassword = hashSync(args.form.password,10);
@@ -33,7 +33,7 @@ exports.signup = async (args, context) => {
     }
 }
 
-exports.login = async (args,context) => {
+exports.login = async (parent,args,context) => {
     try{
         const user = await context.prisma.user.findUnique({
             where: {

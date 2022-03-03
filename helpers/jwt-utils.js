@@ -11,7 +11,7 @@ exports.verifyToken = (token) => {
     return verify(token,env.JWT_SECRET);
 }
 
-exports.getUserId = (authorization) => {
+exports.getUserId = async (authorization,prisma) => {
 
     if( !authorization ){
         return null;
@@ -26,6 +26,14 @@ exports.getUserId = (authorization) => {
     
     const payload = this.verifyToken(token);
     if( !payload ) return null;
+
+    const user = await prisma.user.findUnique({
+        where: {
+            id: payload.userId
+        }
+    })
+
+    if( !user ) return null
     
     return payload.userId
 }
