@@ -17,5 +17,16 @@ model User {
   password          String
   email             String              @unique
   createdAt         DateTime            @default(now())
-  updatedAt         DateTime            @updatedAt
+  updatedAt         DateTime            
+  friends           Friend[]                               
+}
+
+
+model Friend {
+  id                Int                 @id@default(autoincrement())
+  userId            Int
+  friend            User                @relation(fields: [friendId],references: [id])
+  friendId          Int
+
+  @@unique([userId,friendId])
 }

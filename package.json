@@ -4,7 +4,7 @@
   "description": "A Tool to search for the best available courses.",
   "main": "index.js",
   "scripts": {
-    "start": "node server.js",
+    "start": "nodemon server.js",
     "prestart": "./build.sh"
   },
   "repository": {
@@ -26,6 +26,7 @@
     "graphql": "^16.3.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
+    "nodemon": "^2.0.15",
     "prisma": "^3.10.0"
   }
 }

@@ -1,17 +1,17 @@
 const express = require('express')
 const { env } = require('process')
 const { ApolloServer } = require('apollo-server-express')
-const { buildSchema } = require('graphql')
 const morgan = require('morgan')
 const fs = require('fs')
 const path = require('path')
 const Query = require('./resolvers/query')
 const Mutation = require('./resolvers/mutations')
+const User = require('./resolvers/User')
+const Friend = require('./resolvers/Friend')
 const { PrismaClient } = require('@prisma/client')
 const { getUserId } = require('./helpers/jwt-utils')
 const app = new express()
 const prisma = new PrismaClient()
-
 
 app.use(morgan('dev'))
 async function main() {
@@ -19,7 +19,9 @@ async function main() {
         typeDefs: fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf-8'),
         resolvers: {
             Query,
-            Mutation
+            Mutation,
+            User,
+            Friend
         },
         context: async ({ req }) => {
             return {

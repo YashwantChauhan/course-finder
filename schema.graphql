@@ -7,6 +7,7 @@ type Query {
 type Mutation {
     signup(form: signUpForm!): authResponse!
     login(credentials: Auth! ): authResponse!
+    addFriend(friendId: ID!): response! 
 }
 
 
@@ -22,9 +23,10 @@ input signUpForm{
 }
 
 type User{
-    id: String!
+    id: ID!
     username: String!
     email: String!
+    friends: [Friend!]
     createdAt: String
     updatedAt: String!
 }
@@ -40,5 +42,15 @@ type getUsersResponse {
     status: String!,
     error: String,
     users: [User!]
+}
+
+type response{
+    status: String!,
+    error: String
+}
+
+type Friend{
+    id: ID!,
+    friend: User!
 }
 

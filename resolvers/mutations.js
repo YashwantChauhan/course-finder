@@ -79,3 +79,41 @@ exports.login = async (parent,args,context) => {
         return response
     }
 }
+
+exports.addFriend = async (parent,args,context) => {
+    
+    if( !context.userId ) {
+        return {
+            "status": "ERROR",
+            "error": "Please login/signup"
+        }
+    }
+
+    try{    
+        const friend = await context.prisma.friend.create({
+            data: {
+                userId: context.userId,
+                friend: {
+                    connect: {
+                        id: Number(args.friendId)
+                    }
+                }
+            }
+        })
+        
+        const response = {  
+            "status": "OK",
+        }
+        return response;   
+    }
+    catch(err){
+        console.error(err);
+        if( err.code == "P2002" ) err = `You are already friends!`
+        const response = {
+            "status": "ERROR",
+            "error": err
+        }
+        return response
+    }
+
+}
