@@ -24,7 +24,8 @@ exports.signup = async (parent,args,context) => {
         return response
     }
     catch (err) {
-        if( err.code == "P2002" ) err = `Field ${err.meta.target[0]} must be unique`;
+        console.error(err)
+        if( err.code == "P2002" ) err = `Field ${err.meta.target} must be unique`;
         const response = {
             "status": "ERROR",
             "error": err

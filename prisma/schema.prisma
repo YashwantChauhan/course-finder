@@ -6,7 +6,7 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
+  provider = "mysql"
   url = env("DATABASE_URL")
 }
 
@@ -17,7 +17,7 @@ model User {
   password          String
   email             String              @unique
   createdAt         DateTime            @default(now())
-  updatedAt         DateTime            
+  updatedAt         DateTime            @updatedAt
   friends           Friend[]                               
 }
 
@@ -27,6 +27,43 @@ model Friend {
   userId            Int
   friend            User                @relation(fields: [friendId],references: [id])
   friendId          Int
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
 
   @@unique([userId,friendId])
+}
+
+model Course {
+  id                Int                 @id@default(autoincrement())
+  name              String
+  description       String  
+  duration          Int
+  difficulty        String
+  countEnrolled     Int
+  courseGivenBy     String
+  language          String
+  isPaid            Boolean
+  url               String
+  imageUrl          String
+  source            source              @default(coursera)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@unique([id]) 
+}
+
+
+model Options {
+  id                Int                 @id@default(autoincrement())
+  option            String              @unique
+  isDone            Boolean             @default(false)
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+}
+
+enum source {
+  coursera
+  udemy
+  edx
+  youtube
 }

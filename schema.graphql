@@ -1,17 +1,18 @@
 
 
 type Query {
-    getUsers: getUsersResponse!
+    getUsers: getUsersResponse!,
+    getCourses(search: course! ): getCoursesResponse!
 }
 
 type Mutation {
     signup(form: signUpForm!): authResponse!
-    login(credentials: Auth! ): authResponse!
+    login(credentials: auth! ): authResponse!
     addFriend(friendId: ID!): response! 
 }
 
 
-input Auth{
+input auth{
     username: String!
     password: String!
 }
@@ -22,6 +23,10 @@ input signUpForm{
     password: String!
 }
 
+input course{
+    search: String!
+}
+
 type User{
     id: ID!
     username: String!
@@ -30,6 +35,35 @@ type User{
     createdAt: String
     updatedAt: String!
 }
+
+
+type Friend{
+    id: ID!,
+    friend: User!
+}
+
+type Course{
+    id: ID!,
+    name: String!
+    description: String!  
+    duration: String!
+    difficulty: String!
+    countEnrolled: String!
+    courseGivenBy: String!
+    language: String!
+    isPaid: Boolean!
+    url: String!
+    imageUrl: String!
+    source: String!,
+    createdAt: String!
+    updatedAt: String!
+}
+
+type response{
+    status: String!,
+    error: String
+}
+
 
 type authResponse{
     status: String!
@@ -44,13 +78,10 @@ type getUsersResponse {
     users: [User!]
 }
 
-type response{
+type getCoursesResponse{
     status: String!,
-    error: String
+    error: String,
+    courses: [Course!]
 }
 
-type Friend{
-    id: ID!,
-    friend: User!
-}
 

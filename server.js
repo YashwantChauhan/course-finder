@@ -10,10 +10,12 @@ const User = require('./resolvers/User')
 const Friend = require('./resolvers/Friend')
 const { PrismaClient } = require('@prisma/client')
 const { getUserId } = require('./helpers/jwt-utils')
+const dataRouter = require('./routers/data/data')
 const app = new express()
 const prisma = new PrismaClient()
 
 app.use(morgan('dev'))
+app.use(dataRouter)
 async function main() {
     const apolloServer = new ApolloServer({
         typeDefs: fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf-8'),

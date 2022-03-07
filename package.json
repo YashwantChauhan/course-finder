@@ -20,6 +20,7 @@
   "dependencies": {
     "@prisma/client": "^3.10.0",
     "apollo-server-express": "^3.6.3",
+    "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
     "express": "^4.17.3",
     "express-graphql": "^0.12.0",
