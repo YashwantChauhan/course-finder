@@ -9,6 +9,7 @@ type Mutation {
     signup(form: signUpForm!): authResponse!
     login(credentials: auth! ): authResponse!
     addFriend(friendId: ID!): response! 
+    like(courseId: ID!): response!
 }
 
 
@@ -32,6 +33,7 @@ type User{
     username: String!
     email: String!
     friends: [Friend!]
+    likedCourses: [Course!]
     createdAt: String
     updatedAt: String!
 }
@@ -55,6 +57,7 @@ type Course{
     url: String!
     imageUrl: String!
     source: String!,
+    likes: [User!]!,
     createdAt: String!
     updatedAt: String!
 }

@@ -2,10 +2,10 @@
 const { hashSync, compareSync } = require('bcrypt')
 const { createToken } = require('./../helpers/jwt-utils')
 
-exports.signup = async (parent,args,context) => {
+exports.signup = async (parent, args, context) => {
     try {
-        
-        const hashPassword = hashSync(args.form.password,10);
+
+        const hashPassword = hashSync(args.form.password, 10);
         args.form.password = hashPassword;
         const user = await context.prisma.user.create({
             data: args.form
@@ -25,7 +25,7 @@ exports.signup = async (parent,args,context) => {
     }
     catch (err) {
         console.error(err)
-        if( err.code == "P2002" ) err = `Field ${err.meta.target} must be unique`;
+        if (err.code == "P2002") err = `Field ${err.meta.target} must be unique`;
         const response = {
             "status": "ERROR",
             "error": err
@@ -34,15 +34,15 @@ exports.signup = async (parent,args,context) => {
     }
 }
 
-exports.login = async (parent,args,context) => {
-    try{
+exports.login = async (parent, args, context) => {
+    try {
         const user = await context.prisma.user.findUnique({
             where: {
                 username: args.credentials.username,
             }
         })
-        
-        if( !user ){
+
+        if (!user) {
             const response = {
                 "status": "ERROR",
                 "error": "User with those credentials dosen't exists"
@@ -50,7 +50,7 @@ exports.login = async (parent,args,context) => {
             return response
         }
 
-        if( !compareSync(args.credentials.password, user.password ) ){
+        if (!compareSync(args.credentials.password, user.password)) {
             const response = {
                 "status": "ERROR",
                 "error": "Invalid Credentials"
@@ -71,7 +71,7 @@ exports.login = async (parent,args,context) => {
 
         return response
     }
-    catch(err){
+    catch (err) {
         console.error(err);
         const response = {
             "status": "ERROR",
@@ -81,16 +81,16 @@ exports.login = async (parent,args,context) => {
     }
 }
 
-exports.addFriend = async (parent,args,context) => {
-    
-    if( !context.userId ) {
+exports.addFriend = async (parent, args, context) => {
+
+    if (!context.userId) {
         return {
             "status": "ERROR",
             "error": "Please login/signup"
         }
     }
 
-    try{    
+    try {
         const friend = await context.prisma.friend.create({
             data: {
                 userId: context.userId,
@@ -101,15 +101,60 @@ exports.addFriend = async (parent,args,context) => {
                 }
             }
         })
-        
-        const response = {  
+
+        const response = {
             "status": "OK",
         }
-        return response;   
+        return response;
     }
-    catch(err){
+    catch (err) {
         console.error(err);
-        if( err.code == "P2002" ) err = `You are already friends!`
+        if (err.code == "P2002") err = `You are already friends!`
+        const response = {
+            "status": "ERROR",
+            "error": err
+        }
+        return response
+    }
+
+}
+
+exports.like = async (parent, args, context) => {
+
+    if (!context.userId) {
+        return {
+            "status": "ERROR",
+            "error": "Please login/signup"
+        }
+    }
+
+    try {
+        const like = await context.prisma.user.update({
+            data: {
+                likedCourses: {
+                    create: {
+                        course: {
+                            connect: {
+                                id: Number(args.courseId)
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                id: context.userId
+            }
+        })
+
+        const response = {
+            "status": "OK",
+        }
+        return response;
+
+    }
+    catch (err) {
+        console.error(err);
+        if (err.code == "P2002") err = `Already Liked`
         const response = {
             "status": "ERROR",
             "error": err

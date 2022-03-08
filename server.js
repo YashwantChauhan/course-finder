@@ -8,6 +8,7 @@ const Query = require('./resolvers/query')
 const Mutation = require('./resolvers/mutations')
 const User = require('./resolvers/User')
 const Friend = require('./resolvers/Friend')
+const Course = require('./resolvers/Course')
 const { PrismaClient } = require('@prisma/client')
 const { getUserId } = require('./helpers/jwt-utils')
 const dataRouter = require('./routers/data/data')
@@ -23,7 +24,8 @@ async function main() {
             Query,
             Mutation,
             User,
-            Friend
+            Friend,
+            Course,
         },
         context: async ({ req }) => {
             return {
