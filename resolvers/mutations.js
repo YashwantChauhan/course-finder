@@ -25,7 +25,8 @@ exports.signup = async (parent, args, context) => {
     }
     catch (err) {
         console.error(err)
-        if (err.code == "P2002") err = `Field ${err.meta.target} must be unique`;
+        const field = err.meta.target.match(new RegExp(/_.*_/))[0].replace(/_/g,'');
+        if (err.code == "P2002") err = `This ${field} is already taken`;
         const response = {
             "status": "ERROR",
             "error": err
@@ -45,7 +46,7 @@ exports.login = async (parent, args, context) => {
         if (!user) {
             const response = {
                 "status": "ERROR",
-                "error": "User with those credentials dosen't exists"
+                "error": "Wrong Email and Password"
             }
             return response
         }
@@ -53,7 +54,7 @@ exports.login = async (parent, args, context) => {
         if (!compareSync(args.credentials.password, user.password)) {
             const response = {
                 "status": "ERROR",
-                "error": "Invalid Credentials"
+                "error": "Please enter the correct password"
             }
             return response
         }
@@ -162,4 +163,47 @@ exports.like = async (parent, args, context) => {
         return response
     }
 
+}
+
+exports.addToFavourite = async (parent,args,context) => {
+
+    if (!context.userId) {
+        return {
+            "status": "ERROR",
+            "error": "Please login/signup"
+        }
+    }
+
+    try{
+        const favourite = await context.prisma.user.update({    
+            data: {
+                favourites: {
+                    create: {
+                        course: {
+                            connect: {
+                                id: Number(args.courseId)
+                            }
+                        }
+                    }
+                }
+            },
+            where: {
+                id: context.userId
+            }
+        })
+
+        const response = {
+            "status": "OK"
+        }
+        return response
+    }
+    catch(err){
+        console.error(err);
+        if (err.code == "P2002") err = `Already added to favourites`
+        const response = {
+            "status": "ERROR",
+            "error": err
+        }
+        return response
+    }
 }

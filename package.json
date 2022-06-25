@@ -4,8 +4,10 @@
   "description": "A Tool to search for the best available courses.",
   "main": "index.js",
   "scripts": {
-    "start": "nodemon server.js",
-    "prestart": "./build.sh"
+    "dev": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "prestart": "./build.sh",
+    "start": "concurrently \"npm run dev\" \"npm run client\""
   },
   "repository": {
     "type": "git",
@@ -18,16 +20,17 @@
   },
   "homepage": "https://github.com/YashwantChauhan/course-finder#readme",
   "dependencies": {
-    "@prisma/client": "^3.10.0",
+    "@prisma/client": "^3.11.1",
     "apollo-server-express": "^3.6.3",
     "axios": "^0.26.0",
     "bcrypt": "^5.0.1",
+    "concurrently": "^7.0.0",
     "express": "^4.17.3",
     "express-graphql": "^0.12.0",
     "graphql": "^16.3.0",
     "jsonwebtoken": "^8.5.1",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.15",
-    "prisma": "^3.10.0"
+    "prisma": "^3.11.1"
   }
 }

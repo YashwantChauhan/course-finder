@@ -25,6 +25,7 @@ exports.getCourses = async (parent, args, context) => {
         }
     }
 
+    console.log(args.search.search);
     try {
         const courses = await context.prisma.course.findMany({
             where: {

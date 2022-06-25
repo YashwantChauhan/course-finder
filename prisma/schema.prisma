@@ -19,7 +19,8 @@ model User {
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
   friends           Friend[]
-  likedCourses      UseronCourseLikes[]                               
+  likedCourses      UseronCourseLikes[]    
+  favourites        UseronCourseFavourites[]                           
 }
 
 
@@ -47,7 +48,8 @@ model Course {
   url               String
   imageUrl          String
   source            source              @default(coursera)
-  likes             UseronCourseLikes[]                           
+  likes             UseronCourseLikes[]                   
+  favouritesMarked  UseronCourseFavourites[]        
   createdAt         DateTime            @default(now())
   updatedAt         DateTime            @updatedAt
 }
@@ -60,6 +62,18 @@ model UseronCourseLikes{
   courseId          Int
   createdAt         DateTime              @default(now())
   updatedAt         DateTime              @updatedAt 
+
+  @@unique([userId,courseId])
+}
+
+model UseronCourseFavourites{
+  id                Int                 @id@default(autoincrement())
+  user              User                @relation(fields: [userId], references: [id])
+  userId            Int
+  course            Course              @relation(fields: [courseId],references: [id])
+  courseId          Int
+  createdAt         DateTime              @default(now())
+  updatedAt         DateTime              @updatedAt
 
   @@unique([userId,courseId])
 }

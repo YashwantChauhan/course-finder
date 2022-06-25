@@ -17,6 +17,7 @@ const prisma = new PrismaClient()
 
 app.use(morgan('dev'))
 app.use(dataRouter)
+
 async function main() {
     const apolloServer = new ApolloServer({
         typeDefs: fs.readFileSync(path.join(__dirname, 'schema.graphql'), 'utf-8'),

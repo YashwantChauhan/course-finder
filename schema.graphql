@@ -1,7 +1,7 @@
 
 
 type Query {
-    getUsers: getUsersResponse!,
+    getUsers: getUsersResponse!
     getCourses(search: course! ): getCoursesResponse!
 }
 
@@ -10,6 +10,7 @@ type Mutation {
     login(credentials: auth! ): authResponse!
     addFriend(friendId: ID!): response! 
     like(courseId: ID!): response!
+    addToFavourite(courseId: ID!): response!
 }
 
 
@@ -34,13 +35,14 @@ type User{
     email: String!
     friends: [Friend!]
     likedCourses: [Course!]
+    favourites: [Course!]
     createdAt: String
     updatedAt: String!
 }
 
 
 type Friend{
-    id: ID!,
+    id: ID!
     friend: User!
 }
 
@@ -56,14 +58,15 @@ type Course{
     isPaid: Boolean!
     url: String!
     imageUrl: String!
-    source: String!,
-    likes: [User!]!,
+    source: String!
+    likes: [User!]!
+    favouritesMarked: [User!]
     createdAt: String!
     updatedAt: String!
 }
 
 type response{
-    status: String!,
+    status: String!
     error: String
 }
 
@@ -76,13 +79,13 @@ type authResponse{
 }
 
 type getUsersResponse {
-    status: String!,
-    error: String,
+    status: String!
+    error: String
     users: [User!]
 }
 
 type getCoursesResponse{
-    status: String!,
+    status: String!
     error: String,
     courses: [Course!]
 }

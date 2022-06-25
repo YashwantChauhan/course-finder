@@ -1,0 +1,15 @@
+
+.divButt{
+    height: 10px;
+    width: 150px;
+    background-color: #b35900; 
+    margin-left: 45vw;
+    margin-bottom: 5px; 
+    transition: all .1s ease-in-out;
+    cursor: pointer;
+    display: block;
+}
+
+.divButt:hover{
+    height: 15px;
+}

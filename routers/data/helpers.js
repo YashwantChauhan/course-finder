@@ -31,8 +31,8 @@ exports.addCoursesSource_1 = async (options) => {
 
     let coursesAgg = []
 
-    for( let index = 0; index<options.length; index++ ){
-        
+    for (let index = 0; index < options.length; index++) {
+
         const option = options[index]
         let data = constants.courseSources[0].data;
         data.requests[0]["params"] = `query=${option.option}&hitsPerPage=12&page=0`
@@ -44,19 +44,19 @@ exports.addCoursesSource_1 = async (options) => {
             },
             data
         }
-    
+
         const responses = await getCourses(axiosRequest)
-    
-        const courses = responses.data.results[0].hits.map(response=> {
-            
-            const { avgLearningHours, 
-                    name, tagline, 
-                    productDifficultyLevel, 
-                    enrollments, partners, 
-                    language, isCourseFree, 
-                    objectUrl, imageUrl 
+
+        const courses = responses.data.results[0].hits.map(response => {
+
+            const { avgLearningHours,
+                name, tagline,
+                productDifficultyLevel,
+                enrollments, partners,
+                language, isCourseFree,
+                objectUrl, imageUrl
             } = response;
-            
+
             let course = {
                 duration: avgLearningHours,
                 name: name,
@@ -77,26 +77,26 @@ exports.addCoursesSource_1 = async (options) => {
 
         })
 
-        coursesAgg = [...coursesAgg,...courses]
+        coursesAgg = [...coursesAgg, ...courses]
     }
 
-    try{
+    try {
         await addCoursesToDatabase(coursesAgg);
         return true;
     }
-    catch(err){
+    catch (err) {
         console.error(err);
-        throwHttpGraphQLError(400,err)
+        throwHttpGraphQLError(400, err)
     }
-    
+
 }
 
 exports.addCoursesSource_2 = async (options) => {
 
     let coursesAgg = []
 
-    for( let index = 0; index<options.length; index++ ){
-        
+    for (let index = 0; index < options.length; index++) {
+
         const option = options[index]
         let data = constants.courseSources[1].data;
         data.requests[0]["params"] = `query=${option.option}&hitsPerPage=12`
@@ -109,15 +109,15 @@ exports.addCoursesSource_2 = async (options) => {
             data
         }
         const responses = await getCourses(axiosRequest)
-    
-        const courses = responses.data.results[0].hits.map(response=> {
+
+        const courses = responses.data.results[0].hits.map(response => {
             const {
-                    title, primary_description, 
-                    level, recent_enrollment_count, 
-                    partner, language, 
-                    marketing_url, card_image_url
+                title, primary_description,
+                level, recent_enrollment_count,
+                partner, language,
+                marketing_url, card_image_url
             } = response;
-            
+
             let course = {
                 duration: null,
                 name: title,
@@ -138,18 +138,18 @@ exports.addCoursesSource_2 = async (options) => {
 
         })
 
-        coursesAgg = [...coursesAgg,...courses]
+        coursesAgg = [...coursesAgg, ...courses]
     }
 
-    try{
+    try {
         await addCoursesToDatabase(coursesAgg);
         return true;
     }
-    catch(err){
+    catch (err) {
         console.error(err);
-        throwHttpGraphQLError(400,err)
+        throwHttpGraphQLError(400, err)
     }
-    
+
 }
 
 
@@ -157,8 +157,8 @@ exports.addCoursesSource_3 = async (options) => {
 
     let coursesAgg = []
 
-    for( let index = 0; index<options.length; index++ ){
-        
+    for (let index = 0; index < options.length; index++) {
+
         const option = options[index]
         let params = constants.courseSources[2].params
         params.q = option.option
@@ -172,16 +172,16 @@ exports.addCoursesSource_3 = async (options) => {
 
         const responses = await getCourses(axiosRequest)
 
-        const courses = responses.data.courses.map(response=> {
-            
-            const { hrs_of_content_f, 
-                    title, headline,                    
-                    instructional_level_simple, 
-                    num_reviews, visible_instructors, 
-                    lang_s, is_paid, 
-                    learn_url, image_480x270
+        const courses = responses.data.courses.map(response => {
+
+            const { hrs_of_content_f,
+                title, headline,
+                instructional_level_simple,
+                num_reviews, visible_instructors,
+                lang_s, is_paid,
+                learn_url, image_480x270
             } = response;
-            
+
             let course = {
                 duration: Math.floor(Number(hrs_of_content_f)),
                 name: title,
@@ -202,30 +202,34 @@ exports.addCoursesSource_3 = async (options) => {
 
         })
 
-        coursesAgg = [...coursesAgg,...courses]
+        coursesAgg = [...coursesAgg, ...courses]
     }
 
-    try{
+    try {
         await addCoursesToDatabase(coursesAgg);
         return true;
     }
-    catch(err){
+    catch (err) {
         console.error(err);
-        throwHttpGraphQLError(400,err)
+        throwHttpGraphQLError(400, err)
     }
-    
+
 }
 
 
 const addCoursesToDatabase = async (courses) => {
 
     let promises = []
-
-    for( let index = 0; index<courses.length; index++ ){
-        const course = courses[index]
-        promises.push(prisma.course.create({
-            data: course
-        }))
+    try {
+        for (let index = 0; index < courses.length; index++) {
+            const course = courses[index]
+            promises.push(prisma.course.create({
+                data: course
+            }))
+        }
+    }
+    catch (err) {
+        console.error(err)
     }
 
     await Promise.all(promises);
@@ -234,8 +238,8 @@ const addCoursesToDatabase = async (courses) => {
 }
 
 const validateCourse = (course) => {
-    for ( let key in course ){
-        if( course[key] === null ){
+    for (let key in course) {
+        if (course[key] === null) {
             course[key] = constants.defaultCourseSchema[key]
         }
     }
@@ -243,11 +247,11 @@ const validateCourse = (course) => {
 }
 
 const getCourses = async (request) => {
-    try{
-    const response = await axios.request(request);
-    return response;
+    try {
+        const response = await axios.request(request);
+        return response;
     }
-    catch(err){
+    catch (err) {
         console.error(err);
     }
 }
